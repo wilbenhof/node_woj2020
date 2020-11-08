@@ -33,8 +33,10 @@ module.exports =
     },
 
     fetchAll: function(req, res){
+      //var sql = 'SELECT *, FROM JOTAIN, WHERE 1 = 1'
+      
       // Tehtävä 2 node.js tehtävistä
-      connection.query('SELECT *, FROM Asiakas', function(error, results, fields){
+      connection.query('SELECT * FROM Asiakas', function(error, results, fields){
         if ( error ) {
           console.log("Virhe, dataa ei saatu: " + error);
         }
