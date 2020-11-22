@@ -5,6 +5,7 @@ $().ready (() => {
     $.get({
         url: "http://127.0.0.1:3002/Types",
         success: (result) => {
+            console.log(result);
             astys = result;
             result.forEach((r) => {
                 let optstr = `<option value="${r.avain}">${r.lyhenne + " " + r.selite}</option>`;
@@ -50,7 +51,7 @@ $().ready (() => {
         }
     });
 
-    // luodaan formi
+    // luodaan formi asiakasLISÄYSdialogille
     let form = dialog.find("form")
         .on("submit", (event) => {
             event.preventDefault();
@@ -61,9 +62,9 @@ $().ready (() => {
         }
     );
 
-    // tekee post-kutsun palvelimelle ja vastauksen saatuaan jatkaa
+        // tekee post-kutsun palvelimelle ja vastauksen saatuaan jatkaa
     addCust = (param) => {
-        $.post("https://codez.savonia.fi/jussi/api/asiakas/lisaa.php", param)
+        $.post("http://127.0.0.1:3002/Customer/", param)
             .then((data) => {
                 showAddCustStat(data);
                 $('#addCustDialog').dialog("close");
@@ -80,6 +81,16 @@ $().ready (() => {
             $('#addStatus').css("color", "red").text("Lisäämisessä tapahtui virhe: " + data.status_text).show();
         }
     }
+
+    /*
+    // avataan asiakkaanmuokkausdialogi jos sitä ei ole jo avattu
+    $('#editCustBtn').click(() => {
+        const isOpen = $('#editCustDialog').dialog("isOpen");
+        if (!isOpen) {
+            $('#editCustDialog').dialog("open");
+        }
+    });
+    */
 
     // avataan asiakkaanlisäysdialogi jos sitä ei ole jo avattu
     $('#addCustBtn').click(() => {
@@ -143,21 +154,38 @@ searcParameters = () => {
 // tyhjentää data-tablen ja tuo haun tuloksen tableen
 showResultInTable = (result, astys) => {
     $('#data tbody').empty();
+    console.log(astys);
     result.forEach(element => {
         let trstr = "<tr><td>" + element.nimi + "</td>\n";
         trstr += "<td>" + element.osoite + "</td>\n";
         trstr += "<td>" + element.postinro + "</td>\n";
         trstr += "<td>" + element.postitmp + "</td>\n";
         trstr += "<td>" + element.luontipvm + "</td>\n";
-        astys.forEach(asty => {
+        astys.forEach((asty) => {
             if (asty.avain === element.asty_avain) {
                 trstr += "<td>" + asty.selite + "</td>";
             }
         });
-        trstr += `<td><button onclick="deleteCustomer(${element.avain});" class="deleteBtn">Poista</button></td>`;
+        console.log(element);
+        let avain=element.avain;
+        trstr += `<td><button onclick="deleteCustomer(${avain});" class="deleteBtn">Poista</button></td>`; // poista-nappi
+        trstr += `<td><button onclick="updateCustomer(${avain}​​​​);" class="muokkausNappula​​​​">Muokkaa</button></td>`; // muokkaa-nappi
         trstr += "</tr>\n";
         $('#data tbody').append(trstr);
     });
+}
+
+// muokataan asiakasta
+updateCustomer = (key) => {
+    if (isNaN(key)) {
+        return;
+    }
+    console.log("Täällä ollaan :)");   
+    const isOpen = $('#addCustDialog').dialog("isOpen");
+    if (!isOpen) {
+        $('#addCustDialog').dialog("open");
+    }
+    
 }
 
 // poistetaan asiakas
@@ -165,8 +193,9 @@ deleteCustomer = (key) => {
     if (isNaN(key)) {
         return;
     }
-    $.get({
-        url: `https://codez.savonia.fi/jussi/api/asiakas/poista.php?avain=${key}`,
+    $.ajax({
+        url: `http://127.0.0.1:3002/Customer/${key}`,
+        type: 'DELETE',
         success: (result) => {
             fetch();
         }

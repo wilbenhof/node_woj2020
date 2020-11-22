@@ -27,7 +27,7 @@ module.exports =
         else
         {
           console.log("Data = " + JSON.stringify(results));
-          //res.json(results); // onnistunut data lähetetään selaimelle (tai muulle)
+          res.json(results); // onnistunut data lähetetään selaimelle (tai muulle)
         }
     });
 
@@ -94,6 +94,43 @@ module.exports =
 
     update: function(req, res){
 
+      // UPDATE asiakas SET nimi="Aku Ankka", osoite="Testikuja"..... ,WHERE avain=17
+      const sqlQuery = `UPDATE asiakas SET NIMI='${req.body.nimi}', OSOITE=${req.body.osoite}, POSTINRO='${req.body.postinro}', POSTITMP='${req.body.postitmp}', ASTY_AVAIN='${req.body.asty_avain}' WHERE AVAIN = ${req.body.params.id};`;
+      console.log(sqlQuery);
+      connection.query(sqlQuery, function(error, results, fields) {
+        if (error) {
+          console.log("Virhe lisättäessä tietoa asiakas-tauluun: " + error);
+              res.status(500); // Tämä lähtee selaimelle
+              res.json({"status" : "ei toiminut"}); // Ja tämä lähtee selaimelle
+        }
+        else
+        {
+          console.log("Data = " + JSON.stringify(results));
+          res.json(results);
+        }
+      });
+    },
+    fetchCustomer: function(req, res) {
+      const sqlQuery = `SELECT * FROM ASIAKAS WHERE avain = ${req.params.id};`
+
+      connection.query(sql, function(error, results, fields){
+        if ( error ){
+            console.log("Virhe haettaessa dataa Asiakas-taulusta: " + error);
+            res.status(500); // Tämä lähtee selaimelle
+            res.json({"status" : "ei toiminut"}); // Ja tämä lähtee selaimelle
+        }
+        else
+        {
+          if (results) {
+            console.log("Data = " + JSON.stringify(results));
+            res.json(results);
+          }
+          else {
+            res.status(404);
+            res.json({"status": "ei löytynyt"});
+          }
+        }
+      });
     },
 
     delete : function (req, res) {

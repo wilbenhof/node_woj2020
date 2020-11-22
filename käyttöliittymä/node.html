@@ -22,7 +22,7 @@
                 <input type="text" name="address" id="address">
                 <label for="custType">Asiaskastyyppi: </label>
                 <select name="custType" class="custType" id="custType">
-                    <option value="" selected >Kaikki</option>
+                    <option value="empty" selected disabled>Valitse asiakastyyppi...</option>
                 </select>
             </div>
             <div>
@@ -48,10 +48,11 @@
                     <th>Luontipäivämäärä</th>
                     <th>Asiakastyyppi</th>
                     <th style="min-width: 100px; max-width: 125px;"></th>
+                    <th style="min-width: 100px; max-width: 125px;"></th>
                 </tr>
             </thead>
             <tbody>
-    
+                
             </tbody>
         </table>
     </div>
@@ -80,7 +81,7 @@
                 <input type="submit" value="Lisää" id="addCustSubmit">
             </form>
         </div>
-    </div>
-    
+    </div> 
+
 </body>
 </html>

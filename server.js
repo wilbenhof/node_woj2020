@@ -46,7 +46,8 @@ app.route('/Customer')
     .post(customerController.create);
 
 app.route('/Customer/:id')
-    .put(customerController.update)
+    .get(customerController.fetchCustomer)
+    .put(customerController.update) // kutsu put metodia
     .delete(customerController.delete); // esim. http://127.0.0.1:3002/Asiakas/122
 //
 
